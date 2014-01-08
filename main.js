@@ -54,6 +54,36 @@ function build_zips_cities_list() {
 
     call_next_in_chain(); }
 
-build_zips_cities_list(); 
-	
+function tally_and_select(hits) {
+    if (!hits || hits.length == 0) { return false; }
+    var tallies = {};
+    for (var i in hits) {
+	if (!tallies[hits[i]]) {
+	    tallies[hits[i]] = 0; }
+	tallies[hits[i]] += 1; }
+    var max = false, maxvalue = 0;
+    for (var i in tallies) {
+	if (tallies[i] > maxvalue) {
+	    maxvalue = tallies[i];
+	    max = unhash(i); }}
+    return max; }
+
+function unhash(str) {
+    var r = str.split(',');
+    if (r[1] == 'false') {
+	r[1] = false; }
+    return r; }
+
+function match_zips() {
+    var zip_codes = JSON.parse(require('fs').readFileSync('zips.json', 'ascii'));
+    var zip_cities = require('./zips_cities').zips_cities;
+    var zips = {};
+    for (var i in zip_codes) {
+	var zip = zip_codes[i]['zip code'];
+	zips[zip] = tally_and_select(zip_cities[zip]); } 
+    console.log(zips); }
+
+
+
+match_zips();
 	
