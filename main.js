@@ -16,8 +16,8 @@ function get_zips(city, sub_city, next) {
 
 function associate_zips(city, sub_city, next) {
     get_zips(city, sub_city,
-	     function(zips) {
-		 zips.map(function(z) {
+	     function(found_zips) {
+		 found_zips.map(function(z) {
 		     zips[z] = zips[z] || [];
 		     zips[z].push([city, sub_city]); }); 
 	     next(); }); }
@@ -33,19 +33,27 @@ function get_all_location_combos() {
 		combos.push([city.subdomain, city.areas[a].path]); }}}
     return combos; }
 
-var fns = get_all_location_combos().map(function(x) {
-    return {fn: associate_zips, args: x};});
+function build_zips_cities_list() {
+    zips = {};
+    var fns = get_all_location_combos().map(function(x) {
+	return {fn: associate_zips, args: x};});
 
-fns.push({fn: function() {console.log(zips); }, args: []});
+    fns.push({fn: function() {
+	require('fs')
+	    .writeFile('zips_cities.js', 
+		       "exports.zips_cities = " + JSON.stringify(zips) + ";"); }, 
+	      args: []});
 
-function call_next_in_chain() {
-    if (fns.length == 0) {
-	return; }
+    function call_next_in_chain() {
+	if (fns.length == 0) {
+	    return; }
 
-    var fn = fns.shift();
-    fn.args.push(call_next_in_chain);
-    fn.fn.apply(false, fn.args); }
+	var fn = fns.shift();
+	fn.args.push(call_next_in_chain);
+	fn.fn.apply(false, fn.args); }
 
-call_next_in_chain();
+    call_next_in_chain(); }
+
+build_zips_cities_list(); 
 	
 	
