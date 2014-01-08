@@ -1,0 +1,22 @@
+{
+  "name": "craigslist-zipcode-categorizer",
+  "version": "0.0.0",
+  "description": "Go through craigslist cities/sub-cities and associate with zip codes based on frequency of posts with geolocation matches, for the purpose of building a map of the us divided into sections that match craigslist pages",
+    "dependencies": {"craigslist-utils": "*"},
+  "main": "main.js",
+  "scripts": {
+    "test": "nodeunit tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/davidkarn/craigslist-zipcode-categorizer/"
+  },
+  "keywords": [
+    "craigslist",
+    "zipcode",
+    "zip",
+    "zcta"
+  ],
+  "author": "David Karn",
+  "license": "MIT"
+}
